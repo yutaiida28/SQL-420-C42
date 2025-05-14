@@ -1,0 +1,177 @@
+420-c42 02 partie2 
+    - notation graphique
+420-C42 04 Partie 4
+    - acronymes pour les cinq parties principales 
+    • DDL : Data Definition Language
+        • CREATE – ALTER – DROP – RENAME – TRUNCATE – COMMENT 
+    • DML : Data Manipulation Language
+        • INSERT – UPDATE – DELETE
+    • DQL : Data Query Language*
+        • SELECT
+    • TCL : Transaction Control Language
+        • START/SET TRANSACTION – COMMIT – ROLLBACK – SAVEPOINT
+    • DCL : Data Control Language**
+        • GRANT – REVOKE
+420-C42 05 Partie 5 DQL 1
+    - SELECT
+        • un seul element ou plusieur
+    - Alias AS
+    - FROM
+    - WHERE
+        • utilise une expression logique
+            • Opérateurs de comparaison : =, <>, <, <=, >, >=
+            • Opérateurs logiques : AND, OR, NOT
+            • Recherche dans une liste : IN
+            • Recherche dans un intervalle : BETWEEN
+            • Recherche dans une chaîne de caractères : LIKE
+            • Valeur nulle : 
+            
+            SELECT * FROM employe WHERE nom <> 'Dupuis' AND salaire >= 20;
+    - SELECT DISTINCT
+        •retirer tous les doublons avec SELECT DISTINCT
+
+        SELECT DISTINCT departement FROM employe;
+    - opérateurs de comparaison et opérateurs logiques
+        • Les opérateurs de comparaisons sont :
+            • = égalité
+            • <> ou != différent
+            • < plus petit
+            • <= plus petit ou égal
+            • > plus grand
+            • >= plus grand ou égal
+        • Les opérateurs logiques sont :
+            • AND et logique
+            • OR ou logique
+            • NOT négation logique
+    - BETWEEN
+        • Les bornes sont inclusives
+        
+        SELECT nom FROM employe WHERE salaire BETWEEN 10.00 AND 20.00;
+    - liste
+        • une liste explicite :
+        (2, 7, 72)
+        ('Montréal', 'Toronto', 'Vancouver')
+        • produites explicitement
+        (VALUES (2), (7), (72))
+        (VALUES ('Montréal'), ('Toronto'), ('Vancouver'))
+    -opérateurs facilitant l’analyse de liste : ANY, ALL, IN
+        • WHERE xyz >= ANY(VALUES (12), (5), (74)); il DISTINCT
+        (WHERE xyz >= 12 OR xyz >= 5 OR xyz >= 74;)
+        • mais en utilisent SOME il ne distinct pas le quelle
+
+        • WHERE xyz >= ALL(VALUES (12), (5), (74));
+        WHERE xyz >= 12 AND xyz >= 5 AND xyz >= 74;
+
+        • L’opérateur IN correspond à l’opérateur = ANY
+            • permet de valider qu’une valeur existe dans la liste
+        • L’opérateur NOT IN correspond à l’opérateur <> ALL
+            • permet de valider qu’une valeur n’existe pas dans la liste
+        • L’opérateur IN est de loin le plus utilisé.
+        • Il s’utilise avec les listes explicites
+    - opérateurs mathématiques
+        • - négation (-5)
+        • +, -, *, / addition, soustraction, multiplication, division
+        • % modulo
+        • ^ exponentiel (5^2 => 25)
+        • |/, ||/ racine carrée et cubique (|/25 => 5)
+        • @ valeur absolue (@-5 => 5)
+
+        • &, |, #, ~ et, ou, ou exclusif, négation
+        • <<, >> décalage à gauche et à droite
+    - fonctions mathématiques
+        • abs, sign valeur absolue et valeur signe
+        • floor, ceil, round, trunc fonctions d’arrondissement
+        • gcd, lcm plus grand diviseur, plus petit multiple
+        • power, exp puissance et e^x
+        • log, log10, ln logarithme (avec base 10 et e)
+        • sqrt, cbrt racine carrée et cubique
+        • degrees, radians conversion degrés et radians
+        • random, setseed génération de nombre pseudo aléatoire
+        • pi, sin, cos, tan, atan2, … fonctions trigonométriques
+    - opérateur et fonctions liés aux chaînes de caractères 
+        • Opérateurs pour les chaînes de caractères :
+        • || concaténation de 2 chaînes de caractères
+        • Fonctions pour les chaînes de caractères :
+        • ascii, chr retourne le code ascii d’un caractères et inversement
+        • lower, upper, initcap changement de casse (minuscule et majuscule)
+        • concat concaténation de plusieurs chaînes
+        • char, char_length, length retourne le nombre de caractères
+        • overlay, translate, replace substitution de texte dans une chaîne existante
+        • position, strpos recherche d’une sous chaîne
+        • substr, left, right extraction d’une sous chaîne
+        • trim, ltrim, rtrim efface des caractères (espace et autres)
+        • lpad, rpad ajoute des caractères aux extrémités
+        • substring, regexp_... utilisation d’expressions régulières
+    - LIKE
+    - ILIKE
+    - expressions régulière
+    - dates et heures
+    - formatage
+    - conversion de type 
+    - précision (ROUND)
+    - valeurs nulles
+    - IS 
+    - NULLIF
+        • Fonction conditionnelle retournant NULL :
+        • NULLIF(arg1, arg2) -- retourne NULL si arg1 = arg2, sinon arg1
+    - COALESCE
+        • Fonction réalisant la substitution d’une éventuelle valeur nulle :
+        • COALESCE(arg1, arg2, …)   -- retourne la première valeur non nulle
+                                    -- sinon retourne NULL
+                                    -- les arguments doivent être du même type
+    - ORDER BY
+        • Les mots réservés ASC et DESC permettent de spécifier un tri croissant ou décroissant. ASC est l’ordre de tri par défaut.
+        • Les mots réservés NULLS FIRST et NULLS LAST permettent de préciser la position des valeurs nulles. Par défaut, suit l’ordre ASC (LAST) et DESC (FIRST).
+        SELECT nom, prenom, departement AS dep
+            FROM employe
+            ORDER BY dep ASC NULLS LAST,
+                    nom DESC NULLS LAST,
+                    prenom; -- par défaut ASC NULLS FIRST
+    - LIMIT et OFFSET
+        • Ainsi, il est possible de produire une requête pour laquelle on ne désire que les 3 valeurs débutant à la 2e position.
+        SELECT nom, prenom, departement
+            FROM employe
+            ORDER BY nom
+            LIMIT 3
+            OFFSET 2;
+    - CASE
+        • L’expression CASE permet d’obtenir un résultat différent selon plusieurs conditions.
+        • Le synopsis est :
+            SLECT
+                nom,
+                CASE WHEN genre = 'f' THEN 'Femme'
+                    WHEN genre = 'h' THEN 'Homme'
+                    WHEN genre = 'x' THEN 'Non binaire'
+                    ELSE 'Genre inconnu'
+                END AS Genre,
+                CASE WHEN ville = 'Montréal' THEN 'Citadin'
+                    ELSE 'Banlieusard'
+                END AS Habite
+            FROM employe;
+    - requêtes imbriquées
+        SELECT nom, prenom
+        FROM employe
+        WHERE departement = (SELECT departement
+                            FROM employe
+                            WHERE nom = 'Dupuis');
+
+        SELECT nom, prenom
+        FROM employe
+        WHERE ville IN (SELECT ville
+                        FROM employe
+                        WHERE departement = 'r&d'); 
+    - combinaisons de requêtes
+    • Les opérateurs sont :
+        • UNION ajoute à la 1ère requêtes les résultats de la 2e
+        • INTERSECT retourne ce qui est commun aux deux requêtes
+        • EXCEPT retourne ce qui se trouve dans la 1ère requête et qui n’est pas dans la 2e requête (MINUS)
+
+
+•
+•
+•
+•
+•
+•
+•
+•
